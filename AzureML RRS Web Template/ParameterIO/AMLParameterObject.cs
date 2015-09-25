@@ -89,8 +89,10 @@ namespace ParameterIO
 
                 string jsonString = "";
                 //string jsonString = wc.DownloadString(string.Format("https://management-tm.azureml.net/workspaces/{0}/webservices/{1}/endpoints/{2}/apidocument", workspace, webservice, "default"));
-                if (host.Contains("requestresponse001.cloudapp")) jsonString = wc.DownloadString(string.Format("https://requestresponse001.cloudapp.net/workspaces/{0}/services/{1}/swagger.json", workspace, webservice));
+                //if (host.Contains("requestresponse001.cloudapp")) jsonString = wc.DownloadString(string.Format("https://requestresponse001.cloudapp.net/workspaces/{0}/services/{1}/swagger.json", workspace, webservice));
                 if (host.Contains("ussouthcentral.services")) jsonString = wc.DownloadString(string.Format("https://ussouthcentral.services.azureml.net/workspaces/{0}/services/{1}/swagger.json", workspace, webservice));
+                
+                if(string.IsNullOrEmpty(jsonString)) return "Please check API Post URL again.";
 
                 try { this.Title = JObject.Parse(jsonString).SelectToken("info.title").ToString(); }
                 catch (Exception) { return "Cannot get Service Name !!!"; }
