@@ -278,7 +278,7 @@ th {
   font-style: normal;
   font-weight: normal;
   line-height: 1;
-
+  margin: 2px 5px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -2491,23 +2491,24 @@ table th[class*="col-"] {
 }
 fieldset {
   width:100%;  
-  border: 3px rgb(51, 122, 183) solid;
-  border-radius:6px;
+  /*border: 3px rgb(51, 122, 183) solid;*/
+  border-radius:6px; 
 }
 legend {
   display: block;
-  width: 50%;
-  min-width: 370px;
-  margin-left: 1em;
-  padding: 0.2em 0.8em;
+  margin-left:28px;
+  /*width: 100%;*/
+  /*min-width: 370px;*/
+  /*margin-left: -11px;*/
+  padding: 0.2em 0.2em;
   font-size: 21px;
   line-height: inherit;
-  color: #333;
+  color: black;
   border: 0;
-  border-bottom: 1px solid #e5e5e5;
-  border-radius:6px;
-  background-color: rgb(51, 122, 183);
-  color: white;
+  font-weight:bold;
+  /*border-bottom: 1px solid #e5e5e5;*/
+  /*border-radius:6px;*/
+  /*background-color: rgb(51, 122, 183);*/  
 }
 label {
   display: inline-block;
@@ -3821,6 +3822,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .input-group-btn:not(:first-child):not(:last-child),
 .input-group .form-control:not(:first-child):not(:last-child) {
   border-radius: 0;
+  /*border: 1px solid black;*/
 }
 .input-group-addon,
 .input-group-btn {  
@@ -5903,7 +5905,7 @@ button.close {
   margin-left: -3px;
 }
 .tooltip-inner {
-  max-width: 200px;
+  max-width: 320px;
   padding: 3px 8px;
   color: #fff;
   text-align: center;

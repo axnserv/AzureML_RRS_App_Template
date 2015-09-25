@@ -12,6 +12,9 @@ namespace ParameterIO
         [XmlElement("Name")]
         string name = "";
 
+        [XmlElement("Group")]
+        string group = "";
+                
         [XmlElement("Type")]
         string type = "";
 
@@ -97,6 +100,12 @@ namespace ParameterIO
         {
             get { return defaultValue; }
             set { defaultValue = value; }
+        }
+
+        public string Group
+        {
+            get { return group; }
+            set { group = value; }
         }
 
 

@@ -19,6 +19,7 @@
         
         function hideServiceInfo() {
             $("#serviceInfo").toggle("slow");
+            $("#icon_expand_info").toggleClass("glyphicon-triangle-bottom").toggleClass("glyphicon-triangle-right")
         };
 
         $(document).ready(function(){
@@ -92,7 +93,7 @@
             
             <asp:PlaceHolder ID="parameterRegion" runat="server"></asp:PlaceHolder>
             <div style="background-color: transparent; margin-bottom:15px" >
-                <asp:Button ID="btnSave" runat="server" Text="Save change" OnClick="btnSave_Click" CssClass="btn btn btn-primary btnSubmit" />
+                <asp:Button ID="btnSave" runat="server" Text="Save changes" OnClick="btnSave_Click" CssClass="btn btn btn-primary btnSubmit" />
             </div>
         </div>
 

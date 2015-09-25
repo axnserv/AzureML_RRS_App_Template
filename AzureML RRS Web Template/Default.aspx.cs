@@ -32,7 +32,22 @@ namespace AzureMLRRSWebTemplate
             }
             else RequireInfor();
 
-            GenerateControl.ShowInput(InputPlaceHolder1, InputPlaceHolder2, paramObj.listInputParameter, browser);
+            if (paramObj.listGlobalParameter != null && paramObj.listGlobalParameter.Count > 0)
+                // Show Global parameter
+                //GenerateControl.ShowInput(GlobalPlaceHolder1, GlobalPlaceHolder2, paramObj.listGlobalParameter, browser);
+                GenerateControl.ShowInput(PlaceHolderMain, paramObj.listGlobalParameter, browser, "Global Parameters");
+
+            //GenerateControl.ShowInput(InputPlaceHolder1, InputPlaceHolder2, paramObj.listInputParameter, browser);
+            if (paramObj.listInputGroup != null)
+            {
+                paramObj.listInputGroup.Sort(); // Sort input by group name
+                foreach (var groupName in paramObj.listInputGroup)
+                {
+                    var listParam = paramObj.listInputParameter.Where(x => (x.Group == groupName)).ToList();
+                    GenerateControl.ShowInput(PlaceHolderMain, listParam, browser, groupName + " Parameters");
+                }
+            }
+            
         }
 
         private void RequireInfor()
@@ -112,16 +127,74 @@ namespace AzureMLRRSWebTemplate
 
             return dict;
         }
-        //******************************************RRS Client code to submit request to server***************************************
-        //This is copied from the help page sample code and modified for ASP.NEt
-        async Task InvokeRequestResponseService_A(Dictionary<string, string> columnsDictionary)
-        {
-            ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
-            string[] colums = new string[columnsDictionary.Count];
-            columnsDictionary.Keys.CopyTo(colums, 0);
 
-            string[] values = new string[columnsDictionary.Count];
-            columnsDictionary.Values.CopyTo(values, 0);
+
+        private Dictionary<string, string> getGlobalParameters()
+        {
+            var globalParameters = new Dictionary<string, string>();
+            foreach (var global in paramObj.listGlobalParameter)
+            {
+                string columnValue = "";
+                var control = FindControl("GlobalParameters" + global.Name);
+                if (control is TextBox)
+                {
+                    TextBox txt = control as TextBox;
+                    if (txt.Text != "")
+                        columnValue = txt.Text;
+                }
+                else if (control is DropDownList)
+                {
+                    DropDownList lb = control as DropDownList;
+                    if (lb.SelectedIndex != -1)
+                        columnValue = lb.SelectedValue;
+                }
+                if (control is RadioButtonList)
+                {
+                    RadioButtonList ct = control as RadioButtonList;
+                    if (ct.SelectedIndex != -1)
+                        columnValue = ct.SelectedValue;
+                }
+                globalParameters.Add(global.Name, columnValue);
+            }
+
+            return globalParameters;
+        }
+
+        private StringTable getColumnsAndValues(string groupName)
+        {
+            Dictionary<string, string> dict = new Dictionary<string, string>();
+            List<AMLParam> listParam = paramObj.listInputParameter.Where(x => (x.Group == groupName)).ToList();
+            foreach (var param in listParam)
+            {
+                string columnValue = "";
+                var control = FindControl(groupName+param.Name);
+                if (control is TextBox)
+                {
+                    TextBox txt = control as TextBox;
+                    if (txt.Text != "")
+                        columnValue = txt.Text;
+                }
+                else if (control is DropDownList)
+                {
+                    DropDownList lb = control as DropDownList;
+                    if (lb.SelectedIndex != -1)
+                        columnValue = lb.SelectedValue;
+                }
+                if (control is RadioButtonList)
+                {
+                    RadioButtonList ct = control as RadioButtonList;
+                    if (ct.SelectedIndex != -1)
+                        columnValue = ct.SelectedValue;
+                }
+                dict.Add(param.Name, columnValue);
+            }
+
+
+            string[] colums = new string[dict.Count];
+            dict.Keys.CopyTo(colums, 0);
+
+            string[] values = new string[dict.Count];
+            dict.Values.CopyTo(values, 0);
 
             StringTable strtable = new StringTable();
             strtable.ColumnNames = colums;
@@ -131,21 +204,34 @@ namespace AzureMLRRSWebTemplate
                 strtable.Values[0, i] = values[i];
                 strtable.Values[1, i] = values[i];
             }
+            return strtable;
+        }
+
+        //******************************************RRS Client code to submit request to server***************************************
+        //This is copied from the help page sample code and modified for ASP.NEt
+        async Task InvokeRequestResponseService_A(Dictionary<string, string> columnsDictionary)
+        {
+            ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+
+            //var strtable1 = getColumnsAndValues("input1");
+
+            var listInputs = new Dictionary<string, StringTable>();
+
+            foreach(var groupName in paramObj.listInputGroup)
+            {
+                StringTable strparam = getColumnsAndValues(groupName);
+                listInputs.Add(groupName, strparam);
+            }
+
+            var globalParameters = getGlobalParameters();
 
             using (var client = new HttpClient())
             {
                 var scoreRequest = new
                 {
 
-                    Inputs = new Dictionary<string, StringTable>() { 
-                        { 
-                            "input1", 
-                            strtable
-                        },
-                                        },
-                    GlobalParameters = new Dictionary<string, string>()
-                    {
-                    }
+                    Inputs = listInputs,
+                    GlobalParameters = globalParameters
                 };
 
                 string apiKey = (paramObj.APIKey);
@@ -176,11 +262,13 @@ namespace AzureMLRRSWebTemplate
                 }
                 else
                 {
-                    divResult.InnerText = string.Format("The request failed with status code: {0}", response.StatusCode);
-                    // Print the headers - they include the requert ID and the timestamp, which are useful for debugging the failure
-                    divResult.InnerText = response.Headers.ToString();
+                    
+                    //divResult.InnerText = string.Format("The request failed with status code: {0}", response.StatusCode);
+                    //// Print the headers - they include the requert ID and the timestamp, which are useful for debugging the failure
+                    //divResult.InnerText = response.Headers.ToString();
                     string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    divResult.InnerText = responseContent;
+                    OutputPlaceHolder.Controls.Add(new LiteralControl(responseContent));
+                    //divResult.InnerText = responseContent;
                 }
             }
         }        
@@ -195,11 +283,14 @@ namespace AzureMLRRSWebTemplate
                 {
                     OutputObject tmpOutput = new OutputObject();
                     tmpOutput.Name = output.Key;
-                    JArray outputArray = JArray.Parse(output.Value["value"]["Values"][0].ToString());
-                    foreach (var outputValue in outputArray)
-                        tmpOutput.Values.Add(outputValue.ToString());
-
-                    listOutput.Add(tmpOutput);
+                    try
+                    {
+                        JArray outputArray = JArray.Parse(output.Value["value"]["Values"][0].ToString());
+                        foreach (var outputValue in outputArray)
+                            tmpOutput.Values.Add(outputValue.ToString());                       
+                    }
+                    catch (Exception) { }
+                    finally { listOutput.Add(tmpOutput); };
                 }
                 return listOutput;
             }

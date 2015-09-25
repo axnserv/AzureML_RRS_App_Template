@@ -14,7 +14,7 @@ function updateResize() {
         var preOuterWidth = $(this).prev().outerWidth();
         var nextOuterWidth = $(this).next().outerWidth();
         var nextnextWidth = $(this).next().next().outerWidth();
-        var colwidth = $("#col-1").width();
+        var colwidth = $(this).parent().parent().width();
 
         $(this).outerWidth(colwidth - preOuterWidth - nextOuterWidth - nextnextWidth - 5);
 

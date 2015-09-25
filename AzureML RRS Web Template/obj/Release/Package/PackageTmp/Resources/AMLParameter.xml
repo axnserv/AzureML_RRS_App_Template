@@ -1,1 +1,64 @@
-﻿
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AMLParameterObject>
+  <Url>https://ussouthcentral.services.azureml.net/workspaces/4e76bf0f90614873b15e81f5368d9ba1/services/7e735ba5aa4a4de797f82524ec0c83ac/execute?api-version=2.0&amp;details=true</Url>
+  <APIKey>ADqlEZlii6GizX9G0ej/ifTzHxcaRCVRhra5SUENEn5pPApuSl5rJ4BPfZTLluGGv7RJJYHUEMMMgbX/GX7uHQ==</APIKey>
+  <Title>Model selection only - WS</Title>
+  <Description>No description provided for this web service.</Description>
+  <OutputParameter>
+    <Enable>true</Enable>
+    <Alias />
+    <Description />
+    <StrEnum>
+      <string>1</string>
+    </StrEnum>
+    <Name>bestmodel</Name>
+    <Type>string</Type>
+    <Format />
+    <MaxValue>100</MaxValue>
+    <MinValue>0</MinValue>
+    <DefaultValue>1</DefaultValue>
+    <Group>output1</Group>
+  </OutputParameter>
+  <OutputParameter>
+    <Enable>true</Enable>
+    <Alias />
+    <Description />
+    <StrEnum>
+      <string>8.83</string>
+    </StrEnum>
+    <Name>bestmodel_mape</Name>
+    <Type>string</Type>
+    <Format />
+    <MaxValue>100</MaxValue>
+    <MinValue>0</MinValue>
+    <DefaultValue>8.83</DefaultValue>
+    <Group>output1</Group>
+  </OutputParameter>
+  <GlobalParameter>
+    <Enable>true</Enable>
+    <Alias />
+    <Description />
+    <StrEnum />
+    <Name>Database query</Name>
+    <Type>string</Type>
+    <Format>script</Format>
+    <MaxValue>100</MaxValue>
+    <MinValue>0</MinValue>
+    <DefaultValue>select 
+FISCAL_WEEK,
+RGN_DESC,
+SUB_RGN_DESC, 
+CTRY_DESC,
+CUST_TYPE_DESC,
+LOB_DESC,
+CORE_PREM, 
+sum(FLD_SHP_UNTS) as total
+from POCdata
+where RGN_DESC='Americas' and SUB_RGN_DESC='United States and Canada' and CTRY_DESC='United States'
+and CUST_TYPE_DESC ='CBO SmallBusiness' and LOB_DESC = 'Personal Desktops' and CORE_PREM='core'
+and FISCAL_WEEK &lt;= '201501'
+group by FISCAL_WEEK, RGN_DESC, SUB_RGN_DESC, CTRY_DESC, CUST_TYPE_DESC, LOB_DESC, CORE_PREM;</DefaultValue>
+    <Group>GlobalParameters</Group>
+  </GlobalParameter>
+  <Copyright />
+</AMLParameterObject>

@@ -16,6 +16,12 @@ C:\Users\v-kamai\Documents\GitHub\AzureML-RRS-Web-Template\AzureML RRS Web Templ
 C:\Users\v-kamai\Documents\GitHub\AzureML-RRS-Web-Template\AzureML RRS Web Template\ParameterIO\bin\Debug\ParameterIO.pdb
 C:\Users\v-kamai\Documents\GitHub\AzureML-RRS-Web-Template\AzureML RRS Web Template\ParameterIO\bin\Debug\Newtonsoft.Json.dll
 C:\Users\v-kamai\Documents\GitHub\AzureML-RRS-Web-Template\AzureML RRS Web Template\ParameterIO\bin\Debug\Newtonsoft.Json.xml
-C:\Users\v-kamai\Documents\GitHub\AzureML-RRS-Web-Template\AzureML RRS Web Template\ParameterIO\obj\Debug\ParameterIO.csprojResolveAssemblyReference.cache
 C:\Users\v-kamai\Documents\GitHub\AzureML-RRS-Web-Template\AzureML RRS Web Template\ParameterIO\obj\Debug\ParameterIO.dll
 C:\Users\v-kamai\Documents\GitHub\AzureML-RRS-Web-Template\AzureML RRS Web Template\ParameterIO\obj\Debug\ParameterIO.pdb
+D:\Dropbox\Career\Microsoft\AzureML\Project\AzureMLInterface1\AzureML RRS Web Template\ParameterIO\bin\Debug\ParameterIO.dll
+D:\Dropbox\Career\Microsoft\AzureML\Project\AzureMLInterface1\AzureML RRS Web Template\ParameterIO\bin\Debug\ParameterIO.pdb
+D:\Dropbox\Career\Microsoft\AzureML\Project\AzureMLInterface1\AzureML RRS Web Template\ParameterIO\bin\Debug\Newtonsoft.Json.dll
+D:\Dropbox\Career\Microsoft\AzureML\Project\AzureMLInterface1\AzureML RRS Web Template\ParameterIO\bin\Debug\Newtonsoft.Json.xml
+D:\Dropbox\Career\Microsoft\AzureML\Project\AzureMLInterface1\AzureML RRS Web Template\ParameterIO\obj\Debug\ParameterIO.dll
+D:\Dropbox\Career\Microsoft\AzureML\Project\AzureMLInterface1\AzureML RRS Web Template\ParameterIO\obj\Debug\ParameterIO.pdb
+D:\Dropbox\Career\Microsoft\AzureML\Project\AzureMLInterface1\AzureML RRS Web Template\ParameterIO\obj\Debug\ParameterIO.csprojResolveAssemblyReference.cache

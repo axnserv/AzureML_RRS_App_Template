@@ -19,6 +19,7 @@
         
         function hideServiceInfo() {
             $("#serviceInfo").toggle("slow");
+            $("#icon_expand_info").toggleClass("glyphicon-triangle-bottom").toggleClass("glyphicon-triangle-right")
         };
 
         $(document).ready(function(){
@@ -92,7 +93,7 @@
             
             <asp:PlaceHolder ID="parameterRegion" runat="server"></asp:PlaceHolder>
             <div style="background-color: transparent; margin-bottom:15px" >
-                <asp:Button ID="btnSave" runat="server" Text="Save change" OnClick="btnSave_Click" CssClass="btn btn btn-primary btnSubmit" />
+                <asp:Button ID="btnSave" runat="server" Text="Save changes" OnClick="btnSave_Click" CssClass="btn btn btn-primary btnSubmit" />
             </div>
         </div>
 
@@ -126,7 +127,7 @@
       <div class="modal-content">    
         <div class="modal-body alert alert-success fade in" style="margin-bottom: 0px;">
             <a href="#" class="close" data-dismiss="modal" aria-label="Close">&times;</a>
-          <p><strong>Success!</strong> Your changes have been saved successfully.</p>
+          <p><strong>Success!</strong> Your changes have been saved successfully. </br>To come back to Setting page, go to <b>http://&#60;yoursite&#62;/Setting.aspx</b></p>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-primary btn-lg btnHome" >Go to Home Page</button>                

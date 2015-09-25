@@ -25,7 +25,6 @@ namespace AzureMLInterface.Controlers
         /// <param name="page"> Main page </param>
         static public void ShowOutput(PlaceHolder outputPlace, PlaceHolder sciprtPlaceHolde, List<AMLParam> outputParam, List<OutputObject> listOutput, Page page)
         {
-            outputPlace.Controls.Clear();
             if (listOutput == null) return;
             Dictionary<string, double> listOutputNumber = new Dictionary<string, double>();
             outputPlace.Controls.Add(new LiteralControl("<p class=\"titleresult\">Result</p>"));
@@ -36,12 +35,6 @@ namespace AzureMLInterface.Controlers
 
             foreach (OutputObject outputObj in listOutput)
             {
-                var listXmlOutput = outputParam.Where(x => (x.Group == outputObj.Name)).ToList();
-                if(outputObj.Values.Count == 0)
-                {
-                    count += listXmlOutput.Count;
-                    continue;
-                }
                 bool showOutputLabel = false;
                 for (int i = 0; i < outputObj.Values.Count; i++)
                 {
@@ -53,8 +46,7 @@ namespace AzureMLInterface.Controlers
 
                 for (int i = 0; i < outputObj.Values.Count; i++)
                 {
-                    AMLParam param = outputParam[count++];
-                    //AMLParam param = new AMLParam();                    
+                    AMLParam param = outputParam[count];
                     // Check value, if empty, skip this field, don't show on output region
                     
                     if (param.Enable)
@@ -127,7 +119,7 @@ namespace AzureMLInterface.Controlers
                             outputPlace.Controls.Add(new LiteralControl("</tr>"));
                         }
                     }
-                    //count++;
+                    count++;
                 }
                 
             }
@@ -163,22 +155,17 @@ namespace AzureMLInterface.Controlers
         /// <param name="inputPlace2"> div of clolumn 2 </param>
         /// <param name="inputParam"> list of Parameter Object </param>
         /// <param name="browser"> Detect Browser </param>
-        static public void ShowInput(PlaceHolder Main, List<AMLParam> inputParam, HttpBrowserCapabilities browser, string Title)
+        static public void ShowInput(PlaceHolder inputPlace1, PlaceHolder inputPlace2, List<AMLParam> inputParam, HttpBrowserCapabilities browser, string Title)
         {
+            
             if (inputParam == null || inputParam.Count == 0)
             {
                 //inputPlace1.Controls.Add(new LiteralControl("<h3>No web service input</h3>"));
                 return;
             }
 
+            // <fieldset style="margin-top: 30px" id="intput_param"><legend>Input Prameters</legend>
 
-            Main.Controls.Add(new LiteralControl("<fieldset style=\"margin-top: 30px\" id=\"" + Title + "\"><legend>" + textInfo.ToTitleCase(Title.ToLower()) + "</legend>"));
-            Main.Controls.Add(new LiteralControl("<div id=\"div" + Title + "\"><div class=\"row\">"));
-            Main.Controls.Add(new LiteralControl("<div class=\"col-lg-6\"><p>"));
-            var inputPlace1 = new PlaceHolder();
-            var inputPlace2 = new PlaceHolder();
-
-            
             int count = 0;
             for (int i = 0; i < inputParam.Count; i++) //MLParameter param in inputParam)
             {
@@ -193,7 +180,7 @@ namespace AzureMLInterface.Controlers
                 if(string.IsNullOrEmpty(param.Alias))
                     lbl.Text = textInfo.ToTitleCase(param.Name);
                 else lbl.Text = textInfo.ToTitleCase(param.Alias);
-                lbl.ID = "lbl" + GenerateID(param);
+                lbl.ID = "lbl" + inputPlace1.ClientID + param.Name + count++;
                 lbl.Attributes.Add("Class", "fieldname");
 
                 int numOfPlace1 = inputParam.Count / 2;
@@ -226,18 +213,6 @@ namespace AzureMLInterface.Controlers
                     inputPlace2.Controls.Add(ldiv);
                 }
             }
-
-            Main.Controls.Add(inputPlace1);
-            Main.Controls.Add(new LiteralControl("</p></div>"));
-            Main.Controls.Add(new LiteralControl("<div class=\"col-lg-6\"><p>"));
-            Main.Controls.Add(inputPlace2);
-            Main.Controls.Add(new LiteralControl("</p></div></div></div></fieldset>"));
-
-        }
-
-        static private string GenerateID(AMLParam param)
-        {
-            return param.Group + param.Name;
         }
 
         static IEnumerable<Control> GenerateInputControl(AMLParam param, HttpBrowserCapabilities browser)
@@ -253,7 +228,7 @@ namespace AzureMLInterface.Controlers
             else if (param.Type.ToLower() == "integer")   // slider number Integer
             {
                 TextBox txt = new TextBox();
-                txt.ID = GenerateID(param);
+                txt.ID = param.Name;
                 txt.Text = param.DefaultValue;
                 txt.Attributes.Add("Class", "amount form-control form-control-number");
                 if (param.Type == "integer")
@@ -277,7 +252,7 @@ namespace AzureMLInterface.Controlers
             else if (param.Type.ToLower() == "number")   // slider number Integer
             {
                 TextBox txt = new TextBox();
-                txt.ID = GenerateID(param);
+                txt.ID = param.Name;
                 txt.Text = param.DefaultValue;
                 txt.Attributes.Add("Class", "amount form-control form-control-number");
                 if (browser.Browser.ToLower() == "internetexplorer")
@@ -299,13 +274,11 @@ namespace AzureMLInterface.Controlers
             else
             {
                 TextBox txt = new TextBox();
-                txt.ID = GenerateID(param);
+                txt.ID = param.Name;
                 txt.Text = param.DefaultValue;
                 txt.Attributes.Add("Class", "form-control");
-                if (param.Format == "script")
-                    txt.TextMode = TextBoxMode.MultiLine;
-                else if (param.Format == "password")
-                    txt.TextMode = TextBoxMode.Password;
+                if (param.Type == "integer")
+                    txt.TextMode = TextBoxMode.Number;
 
                 yield return txt;
             }
@@ -314,7 +287,7 @@ namespace AzureMLInterface.Controlers
         static private Control GenerateDropdownList(AMLParam param)
         {
             DropDownList drop = new DropDownList();
-            drop.ID = GenerateID(param);
+            drop.ID = param.Name;
             drop.Attributes.Add("Class", "form-control");
             foreach (string ele in param.StrEnum)
             {
@@ -329,7 +302,7 @@ namespace AzureMLInterface.Controlers
         static private Control GenerateRadio(AMLParam param)
         {
             RadioButtonList rabtnList = new RadioButtonList();
-            rabtnList.ID = GenerateID(param);
+            rabtnList.ID = param.Name;
             var listEmum = param.StrEnum.OrderBy(x => x.Length).ToList();
             foreach (string ele in listEmum)
             {
@@ -348,7 +321,7 @@ namespace AzureMLInterface.Controlers
             LiteralControl lit = new LiteralControl();
             lit.Text += string.Format("{0:#,###0}",int.Parse(param.MinValue));
             lit.Text += string.Format("<div id=\"IEslider_{0}\" class = \"IEslider slider-displayIE\" data-begin=\"{1}\" data-end=\"{2}\" data-def=\"{3}\" data-step=\"{4}\"></div>",
-                                                GenerateID(param), param.MinValue, param.MaxValue, param.DefaultValue, stepvalue);
+                                                param.Name, param.MinValue, param.MaxValue, param.DefaultValue, stepvalue);
             lit.Text += string.Format("{0:#,###0}", int.Parse(param.MaxValue));
             return lit;
         }
@@ -365,7 +338,7 @@ namespace AzureMLInterface.Controlers
             lit.Text += "<div class=\"input-group\">";
             lit.Text += "<span class=\"input-group-addon\">" + string.Format("{0:#,###0}",int.Parse(param.MinValue)) + "</span>";
             lit.Text += string.Format("<input id=\"slider_{0}\" type=\"range\" min=\"{1}\" max=\"{2}\" step=\"{3}\" class=\"slider slider-displayHTML form-control\"/>",
-                                                GenerateID(param), param.MinValue, param.MaxValue, stepvalue);
+                                                param.Name, param.MinValue, param.MaxValue, stepvalue);
             lit.Text += "<span class=\"input-group-addon\">" + string.Format("{0:#,###0}",int.Parse(param.MaxValue)) + "</span>";
             //lit.Text += "</div>";             // sitll miss this end div for txt control
             //lit.Text += param.MaxValue;
@@ -376,8 +349,8 @@ namespace AzureMLInterface.Controlers
         {
             LiteralControl lit = new LiteralControl();
             lit.Text += "<script>";
-            lit.Text += "document.getElementById(\"slider_{0}\").oninput = function(event){document.getElementById(\"{0}\").value = event.target.value};".Replace("{0}", GenerateID(param));
-            lit.Text += "document.getElementById(\"{0}\").onchange = function(event){document.getElementById(\"slider_{0}\").value = event.target.value};".Replace("{0}", GenerateID(param));
+            lit.Text += "document.getElementById(\"slider_{0}\").oninput = function(event){document.getElementById(\"{0}\").value = event.target.value};".Replace("{0}", param.Name);
+            lit.Text += "document.getElementById(\"{0}\").onchange = function(event){document.getElementById(\"slider_{0}\").value = event.target.value};".Replace("{0}", param.Name);
             lit.Text += "</script>";
 
             return lit;
@@ -387,8 +360,8 @@ namespace AzureMLInterface.Controlers
         {
             LiteralControl lit = new LiteralControl();
             lit.Text += "<script>";
-            lit.Text += "document.getElementById(\"slider_{0}\").onchange = function(event){document.getElementById(\"{0}\").value = event.target.value};".Replace("{0}", GenerateID(param));
-            lit.Text += "document.getElementById(\"{0}\").onchange = function(event){document.getElementById(\"slider_{0}\").value = event.target.value};".Replace("{0}", GenerateID(param));
+            lit.Text += "document.getElementById(\"slider_{0}\").onchange = function(event){document.getElementById(\"{0}\").value = event.target.value};".Replace("{0}", param.Name);
+            lit.Text += "document.getElementById(\"{0}\").onchange = function(event){document.getElementById(\"slider_{0}\").value = event.target.value};".Replace("{0}", param.Name);
             lit.Text += "</script>";
 
             return lit;
