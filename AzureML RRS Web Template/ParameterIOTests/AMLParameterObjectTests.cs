@@ -54,11 +54,11 @@ namespace ParameterIO.Tests
         [TestMethod()]
         public void GetSwaggerUrlTest_ClassicWebService_ApiHelpPageLink_DifferentRegion()
         {
-            string url = "https://ussouthcentral.services.azureml.net/workspaces/5e50059a3b724c58a1cff1908bcd0c18/services/acfd77e2a1824d5286f30780997ad70a/execute?api-version=2.0&details=true";
+            string url = "https://westus.services.azureml.net/workspaces/5e50059a3b724c58a1cff1908bcd0c18/services/acfd77e2a1824d5286f30780997ad70a/execute?api-version=2.0&details=true";
 
             string actual = AMLParameterObject.GetSwaggerUrl(url);
 
-            Assert.AreEqual("https://ussouthcentral.services.azureml.net/workspaces/5e50059a3b724c58a1cff1908bcd0c18/services/acfd77e2a1824d5286f30780997ad70a/swagger.json", actual, "Swagger url was not as expected.");
+            Assert.IsNull(actual, "Null swagger url was expected.");
         }
 
         [TestMethod()]
