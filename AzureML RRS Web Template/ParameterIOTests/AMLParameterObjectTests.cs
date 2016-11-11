@@ -80,5 +80,35 @@ namespace ParameterIO.Tests
 
             Assert.AreEqual("https://ussouthcentral.services.azureml.net/subscriptions/92c76a2f0e1c4216b65eabf7a3f34c1e/services/a80940cb57624716a8e7c2223c6bb672/swagger.json", actual, "Swagger url was not as expected.");
         }
+
+        [TestMethod()]
+        public void GetPostUrlTest()
+        {
+            string url = "https://ussouthcentral.services.azureml.net/workspaces/5e50059a3b724c58a1cff1908bcd0c18/services/acfd77e2a1824d5286f30780997ad70a/execute?api-version=2.0&details=true";
+
+            string actual = AMLParameterObject.GetSwaggerUrl(url);
+
+            Assert.AreEqual("https://ussouthcentral.services.azureml.net/workspaces/5e50059a3b724c58a1cff1908bcd0c18/services/acfd77e2a1824d5286f30780997ad70a/swagger.json", actual, "Swagger url was not as expected.");
+        }
+
+        [TestMethod()]
+        public void GetPostUrlTest_ClassicWebService_ApiHelpPageLink()
+        {
+            string url = "https://ussouthcentral.services.azureml.net/workspaces/5e50059a3b724c58a1cff1908bcd0c18/services/acfd77e2a1824d5286f30780997ad70a/execute?api-version=2.0&details=true";
+
+            string actual = AMLParameterObject.GetPostUrl(url);
+
+            Assert.AreEqual("https://ussouthcentral.services.azureml.net/workspaces/5e50059a3b724c58a1cff1908bcd0c18/services/acfd77e2a1824d5286f30780997ad70a/execute?api-version=2.0&details=true", actual, "Post url was not as expected.");
+        }
+
+        [TestMethod()]
+        public void GetPostUrlTest_ClassicWebService_TestPreviewPageLink()
+        {
+            string url = "https://ussouthcentral.services.azureml.net/workspaces/5e50059a3b724c58a1cff1908bcd0c18/services/acfd77e2a1824d5286f30780997ad70a/execute?api-version=2.0&format=swagger";
+
+            string actual = AMLParameterObject.GetPostUrl(url);
+
+            Assert.AreEqual("https://ussouthcentral.services.azureml.net/workspaces/5e50059a3b724c58a1cff1908bcd0c18/services/acfd77e2a1824d5286f30780997ad70a/execute?api-version=2.0&details=true", actual, "Post url was not as expected.");
+        }
     }
 }

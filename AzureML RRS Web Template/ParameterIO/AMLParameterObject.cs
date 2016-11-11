@@ -56,6 +56,8 @@ namespace ParameterIO
         {
             string result = null;
 
+            url = AMLParameterObject.GetPostUrl(url);
+
             if (!string.IsNullOrEmpty(url))
             {
                 Uri apiUrl = new Uri(url);
@@ -64,9 +66,21 @@ namespace ParameterIO
                 {
                     executeSegment = apiUrl.Segments.FirstOrDefault(s => executeSegment.Equals(s, StringComparison.InvariantCultureIgnoreCase));
                 }
+                result = apiUrl.AbsoluteUri.Replace(apiUrl.Query, string.Empty).Replace(executeSegment, "swagger.json").ToLower();
+            }
+            return result;
+        }
+
+        public static string GetPostUrl(string url)
+        {
+            string result = null;
+
+            if (!string.IsNullOrEmpty(url))
+            {
+                Uri apiUrl = new Uri(url);
                 if ("ussouthcentral.services.azureml.net".Equals(apiUrl.Host, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    result = apiUrl.AbsoluteUri.Replace(apiUrl.Query, string.Empty).Replace(executeSegment, "swagger.json").ToLower();
+                    result = apiUrl.AbsoluteUri.Replace(apiUrl.Query, "?api-version=2.0&details=true").ToLower();
                 }
             }
 
