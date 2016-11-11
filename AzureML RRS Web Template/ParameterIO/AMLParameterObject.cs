@@ -78,7 +78,8 @@ namespace ParameterIO
             if (!string.IsNullOrEmpty(url))
             {
                 Uri apiUrl = new Uri(url);
-                if ("ussouthcentral.services.azureml.net".Equals(apiUrl.Host, StringComparison.InvariantCultureIgnoreCase))
+                if (!string.IsNullOrEmpty(apiUrl.Host) &&
+                    apiUrl.Host.EndsWith("services.azureml.net", StringComparison.InvariantCultureIgnoreCase))
                 {
                     result = apiUrl.AbsoluteUri.Replace(apiUrl.Query, "?api-version=2.0&details=true").ToLower();
                 }
